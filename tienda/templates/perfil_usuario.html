@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .profile-hero {
+        background: linear-gradient(135deg, #d8f2ff, #a7dcff);
+        border-radius: 26px;
+        padding: 35px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 22px rgba(0, 83, 160, 0.10);
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 22px;
+        padding: 28px;
+        border: 1px solid #d7ecff;
+        box-shadow: 0 5px 18px rgba(0, 83, 160, 0.08);
+    }
+
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #2f9df4;
+        background: #eef6ff;
+    }
+
+    .profile-placeholder {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #d8f2ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 70px;
+        border: 4px solid #2f9df4;
+    }
+
+    label {
+        font-weight: 700;
+        color: #031b3d;
+    }
+
+    input {
+        border-radius: 10px !important;
+    }
+</style>
+
+<div class="profile-hero">
+    <h1>👤 Mi Perfil</h1>
+    <p>
+        Actualiza tus datos personales, dirección, correo y foto de perfil.
+    </p>
+</div>
+
+<div class="profile-card">
+
+    <div class="row">
+
+        <div class="col-md-4 text-center">
+
+            {% if perfil.foto %}
+                <img src="{{ perfil.foto.url }}" class="profile-img">
+            {% else %}
+                <div class="profile-placeholder">
+                    👤
+                </div>
+            {% endif %}
+
+            <h4 class="mt-3">
+                {{ nombre_usuario_visible }}
+            </h4>
+
+            <span class="badge bg-primary">
+                {{ rol_usuario_visible }}
+            </span>
+
+        </div>
+
+        <div class="col-md-8">
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <h4>📋 Datos personales</h4>
+
+                {{ user_form.as_p }}
+
+                <hr>
+
+                <h4>📍 Datos de contacto</h4>
+
+                {{ perfil_form.as_p }}
+
+                <button type="submit" class="btn btn-tecno">
+                    Guardar cambios
+                </button>
+
+                <a href="{% url 'home' %}" class="btn btn-secondary">
+                    Volver
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

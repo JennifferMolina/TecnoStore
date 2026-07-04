@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load precio_filters %}
+{% load i18n %}
+
+{% block content %}
+
+<style>
+    .cart-shell {
+        background: linear-gradient(135deg, #e0f2fe, #f3fbff);
+        border: 1px solid var(--borde);
+        border-radius: 22px;
+        box-shadow: 0 8px 22px rgba(8, 47, 73, 0.12);
+        padding: 28px;
+    }
+
+    .cart-title {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    .cart-title h2 {
+        color: var(--azul-dark);
+        margin-bottom: 0;
+    }
+
+    .cart-table {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .cart-table thead {
+        background: var(--azul-dark);
+        color: white;
+    }
+
+    .cart-product {
+        align-items: center;
+        display: flex;
+        gap: 14px;
+        min-width: 240px;
+    }
+
+    .cart-product img {
+        background: var(--azul-soft);
+        border: 1px solid var(--borde);
+        border-radius: 12px;
+        height: 72px;
+        object-fit: contain;
+        width: 72px;
+    }
+
+    .cart-product-name {
+        color: var(--azul-dark);
+        font-weight: 900;
+    }
+
+    .cart-total-box {
+        background: white;
+        border: 1px solid var(--borde);
+        border-radius: 18px;
+        padding: 22px;
+    }
+
+    .cart-total {
+        color: var(--azul-main);
+        font-size: 30px;
+        font-weight: 900;
+    }
+
+    .btn-cart-main,
+    .btn-cart-secondary,
+    .btn-cart-warning,
+    .btn-cart-danger {
+        border: none;
+        border-radius: 12px;
+        font-weight: 900;
+        padding: 10px 15px;
+        text-decoration: none;
+    }
+
+    .btn-cart-main {
+        background: var(--azul-main);
+        color: white;
+    }
+
+    .btn-cart-main:hover {
+        background: var(--azul-dark);
+        color: white;
+    }
+
+    .btn-cart-secondary {
+        background: var(--azul-accent);
+        color: var(--azul-dark);
+    }
+
+    .btn-cart-secondary:hover,
+    .btn-cart-warning:hover {
+        background: #7dd3fc;
+        color: var(--azul-dark);
+    }
+
+    .btn-cart-warning {
+        background: #dff4ff;
+        color: var(--azul-dark);
+        border: 1px solid var(--borde);
+    }
+
+    .btn-cart-danger {
+        background: #dc2626;
+        color: white;
+    }
+
+    .btn-cart-danger:hover {
+        background: #991b1b;
+        color: white;
+    }
+
+    .cart-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    @media (max-width: 768px) {
+        .cart-shell {
+            padding: 20px;
+        }
+
+        .cart-table-inner {
+            min-width: 820px;
+        }
+
+        .cart-actions {
+            justify-content: stretch;
+        }
+
+        .cart-actions a {
+            text-align: center;
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="cart-shell">
+    <div class="cart-title">
+        <h2>🛒 {% trans "Mi carrito" %}</h2>
+        <a href="{% url 'catalogo' %}" class="btn-cart-secondary">{% trans "Continuar compra" %}</a>
+    </div>
+
+    <div class="table-responsive cart-table">
+        <table class="table table-bordered align-middle mb-0 cart-table-inner">
+            <thead>
+                <tr>
+                    <th>{% trans "Producto" %}</th>
+                    <th>{% trans "Cantidad" %}</th>
+                    <th>{% trans "Precio unitario" %}</th>
+                    <th>{% trans "Subtotal" %}</th>
+                    <th>{% trans "Acción" %}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in carrito.items.all %}
+                <tr>
+                    <td>
+                        <div class="cart-product">
+                            {% if item.producto.imagen %}
+                                <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}">
+                            {% endif %}
+                            <div>
+                                <div class="cart-product-name">{{ item.producto.nombre }}</div>
+                                <small>{{ item.producto.categoria.nombre }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>{{ item.producto.precio|precio_clp }}</td>
+                    <td><strong>{{ item.subtotal|precio_clp }}</strong></td>
+                    <td>
+                        <a href="{% url 'eliminar_item_carrito' item.id %}" class="btn-cart-danger btn-sm">
+                            {% trans "Quitar 1" %}
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">{% trans "El carrito está vacío." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row align-items-center mt-4 g-3">
+        <div class="col-lg-4">
+            <div class="cart-total-box">
+                <div>{% trans "Total" %}</div>
+                <div class="cart-total">{{ carrito.total|precio_clp }}</div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="cart-actions">
+                <a href="{% url 'catalogo' %}" class="btn-cart-secondary">{% trans "Continuar compra" %}</a>
+
+                <a href="{% url 'vaciar_carrito' %}" class="btn-cart-warning">{% trans "Vaciar carrito" %}</a>
+
+                <a href="{% url 'checkout_envio' %}" class="btn-cart-main">{% trans "Finalizar compra" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

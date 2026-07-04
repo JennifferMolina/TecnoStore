@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load precio_filters %}
+
+{% block content %}
+
+<style>
+    .admin-orders-header {
+        background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        border: 1px solid var(--borde);
+        border-radius: 22px;
+        box-shadow: 0 8px 22px rgba(8, 47, 73, 0.12);
+        margin-bottom: 26px;
+        padding: 28px;
+    }
+
+    .order-card {
+        background: white;
+        border: 1px solid var(--borde);
+        border-radius: 20px;
+        box-shadow: 0 5px 18px rgba(8, 47, 73, 0.10);
+        margin-bottom: 22px;
+        overflow: hidden;
+    }
+
+    .order-card-header {
+        align-items: center;
+        background: var(--azul-dark);
+        color: white;
+        display: flex;
+        gap: 14px;
+        justify-content: space-between;
+        padding: 18px 22px;
+        flex-wrap: wrap;
+    }
+
+    .order-card-header h4 {
+        color: white;
+        margin-bottom: 0;
+    }
+
+    .order-total {
+        background: var(--azul-accent);
+        border-radius: 999px;
+        color: var(--azul-dark);
+        font-weight: 900;
+        padding: 8px 14px;
+    }
+
+    .order-card-body {
+        padding: 22px;
+    }
+
+    .info-panel {
+        background: var(--azul-soft);
+        border: 1px solid var(--borde);
+        border-radius: 16px;
+        height: 100%;
+        padding: 18px;
+    }
+
+    .info-panel h5 {
+        margin-bottom: 14px;
+    }
+
+    .info-line {
+        margin-bottom: 8px;
+    }
+
+    .info-line strong {
+        color: var(--azul-dark);
+    }
+
+    .product-mini {
+        align-items: center;
+        display: flex;
+        gap: 12px;
+        min-width: 240px;
+    }
+
+    .product-mini img {
+        background: var(--azul-soft);
+        border: 1px solid var(--borde);
+        border-radius: 10px;
+        height: 56px;
+        object-fit: contain;
+        width: 56px;
+    }
+
+    .product-mini-name {
+        color: var(--azul-dark);
+        font-weight: 900;
+    }
+
+    .order-status {
+        background: #e0f2fe;
+        border-radius: 999px;
+        color: var(--azul-dark);
+        display: inline-block;
+        font-weight: 900;
+        padding: 6px 12px;
+    }
+
+    @media (max-width: 768px) {
+        .order-products-table {
+            min-width: 760px;
+        }
+    }
+</style>
+
+<section class="admin-orders-header">
+    <h2>🧾 Compras realizadas por clientes</h2>
+    <p class="mb-0">
+        Revisa el detalle de cada compra, productos adquiridos, dirección de envío
+        y datos de contacto del cliente.
+    </p>
+</section>
+
+{% for pedido in pedidos %}
+    <article class="order-card">
+        <div class="order-card-header">
+            <div>
+                <h4>Pedido #{{ pedido.id }}</h4>
+                <small>{{ pedido.fecha|date:"d/m/Y H:i" }}</small>
+            </div>
+
+            <div class="order-total">
+                Total: {{ pedido.total|precio_clp }}
+            </div>
+        </div>
+
+        <div class="order-card-body">
+            <div class="row g-3 mb-4">
+                <div class="col-lg-4">
+                    <div class="info-panel">
+                        <h5>Cliente</h5>
+                        <div class="info-line">
+                            <strong>Usuario:</strong> {{ pedido.usuario.username }}
+                        </div>
+                        <div class="info-line">
+                            <strong>Nombre:</strong> {{ pedido.nombre_completo|default:"No informado" }}
+                        </div>
+                        <div class="info-line">
+                            <strong>Estado:</strong> <span class="order-status">{{ pedido.estado }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="info-panel">
+                        <h5>Contacto</h5>
+                        <div class="info-line">
+                            <strong>Email:</strong> {{ pedido.email|default:"No informado" }}
+                        </div>
+                        <div class="info-line">
+                            <strong>Teléfono:</strong> {{ pedido.telefono|default:"No informado" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="info-panel">
+                        <h5>Dirección de envío</h5>
+                        <div class="info-line">
+                            <strong>Región:</strong> {{ pedido.region|default:"No informado" }}
+                        </div>
+                        <div class="info-line">
+                            <strong>Ciudad:</strong> {{ pedido.ciudad|default:"No informado" }}
+                        </div>
+                        <div class="info-line">
+                            <strong>Dirección:</strong> {{ pedido.direccion|default:"No informado" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5>Productos comprados</h5>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle order-products-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for detalle in pedido.detalles.all %}
+                            <tr>
+                                <td>
+                                    <div class="product-mini">
+                                        {% if detalle.producto.imagen %}
+                                            <img src="{{ detalle.producto.imagen.url }}" alt="{{ detalle.producto.nombre }}">
+                                        {% endif %}
+                                        <div>
+                                            <div class="product-mini-name">{{ detalle.producto.nombre }}</div>
+                                            <small>{{ detalle.producto.categoria.nombre }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ detalle.cantidad }}</td>
+                                <td>{{ detalle.precio_unitario|precio_clp }}</td>
+                                <td><strong>{{ detalle.subtotal|precio_clp }}</strong></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4">Este pedido no tiene productos registrados.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </article>
+{% empty %}
+    <div class="card p-4">
+        No hay compras registradas.
+    </div>
+{% endfor %}
+
+{% endblock %}

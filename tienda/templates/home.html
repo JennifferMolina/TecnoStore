@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+<style>
+    .hs-hero {
+        background: linear-gradient(135deg, rgba(14,82,130,0.08), rgba(6,118,191,0.06));
+        border-radius: 20px;
+        padding: 56px 28px;
+        margin-bottom: 36px;
+        border: 1px solid var(--borde);
+        box-shadow: 0 12px 30px rgba(8,47,73,0.06);
+    }
+
+    .hs-title {
+        font-size: 40px;
+        font-weight: 900;
+        color: var(--azul-dark);
+        line-height: 1.05;
+    }
+
+    .hs-subtitle {
+        color: var(--azul-main);
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    .hs-cta {
+        background: var(--azul-main);
+        color: white;
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(8,47,73,0.08);
+        border: none;
+    }
+
+    .quick-card {
+        background: white;
+        border: 1px solid var(--borde);
+        border-radius: 14px;
+        padding: 18px;
+        text-align: center;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .quick-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 24px rgba(8,47,73,0.08);
+    }
+
+    .quick-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .category-card {
+        border-radius: 14px;
+        overflow: hidden;
+        color: white;
+        min-height: 160px;
+        display: flex;
+        align-items: flex-end;
+        padding: 18px;
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 8px 22px rgba(8,47,73,0.08);
+    }
+
+    .category-technology { background-image: linear-gradient(180deg, rgba(15,95,153,0.9), rgba(6,48,77,0.9)), url(''); }
+    .category-accesorios { background-image: linear-gradient(180deg, rgba(56,189,248,0.9), rgba(6,48,77,0.9)), url(''); }
+    .category-gaming { background-image: linear-gradient(180deg, rgba(2,132,199,0.9), rgba(6,48,77,0.9)), url(''); }
+
+    .category-title { font-weight: 900; font-size: 20px; }
+    .category-sub { color: rgba(255,255,255,0.9); font-weight:700; }
+
+    .cta-footer {
+        background: linear-gradient(90deg, rgba(6,118,191,0.12), rgba(15,95,153,0.06));
+        border-radius: 16px;
+        padding: 32px 22px;
+        text-align: center;
+        margin-top: 36px;
+        border: 1px solid var(--borde);
+    }
+
+    @media (max-width: 576px) {
+        .hs-title { font-size: 28px; }
+        .category-card { min-height: 130px; }
+    }
+</style>
+
+<div class="container">
+
+    <!-- Hero -->
+    <section class="hs-hero">
+        <div class="row align-items-center">
+            <div class="col-md-7">
+                <h1 class="hs-title">{% trans "Bienvenida a TecnoStore" %}</h1>
+                <p class="hs-subtitle">{% trans "Tecnología, accesorios y gaming seleccionados para una experiencia de compra rápida, segura y moderna." %}</p>
+
+                <div class="mt-4">
+                    <a href="{% url 'catalogo' %}" class="btn hs-cta">{% trans "Ir al catálogo" %}</a>
+                </div>
+            </div>
+
+            <div class="col-md-5 d-none d-md-block text-end">
+                <img src="/media/productos/notebook_lenovo.jpeg" alt="Dispositivo" style="max-width:320px; width:100%; border-radius:12px; box-shadow:0 12px 30px rgba(8,47,73,0.08);">
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick access -->
+    <section class="mb-4">
+        <div class="row g-3">
+            <div class="col-12">
+                <h3 class="mb-3" style="color:var(--azul-dark); font-weight:900;">{% trans "Accesos rápidos" %}</h3>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="{% url 'catalogo' %}" class="text-decoration-none text-reset">
+                    <div class="quick-card">
+                        <div class="quick-icon">🏷️</div>
+                        <div class="h5" style="font-weight:900;">{% trans "Catálogo" %}</div>
+                        <div class="text-muted">{% trans "Ver todos los productos" %}</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="{% url 'mis_compras' %}" class="text-decoration-none text-reset">
+                    <div class="quick-card">
+                        <div class="quick-icon">📦</div>
+                        <div class="h5" style="font-weight:900;">{% trans "Mis compras" %}</div>
+                        <div class="text-muted">{% trans "Historial y seguimiento" %}</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="{% url 'perfil_usuario' %}" class="text-decoration-none text-reset">
+                    <div class="quick-card">
+                        <div class="quick-icon">👤</div>
+                        <div class="h5" style="font-weight:900;">{% trans "Perfil" %}</div>
+                        <div class="text-muted">{% trans "Datos y direcciones" %}</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a href="{% url 'contacto' %}" class="text-decoration-none text-reset">
+                    <div class="quick-card">
+                        <div class="quick-icon">✉️</div>
+                        <div class="h5" style="font-weight:900;">{% trans "Contacto" %}</div>
+                        <div class="text-muted">{% trans "Soporte y consultas" %}</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="mb-4">
+        <h3 class="mb-3" style="color:var(--azul-dark); font-weight:900;">{% trans "Categorías" %}</h3>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <a href="{% url 'catalogo' %}?categoria=1#productos" class="text-decoration-none">
+                    <div class="category-card category-technology">
+                        <div>
+                            <div class="category-title">{% trans "Tecnología" %}</div>
+                            <div class="category-sub">{% trans "Laptops, celulares y más" %}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{% url 'catalogo' %}?categoria=2#productos" class="text-decoration-none">
+                    <div class="category-card category-accesorios">
+                        <div>
+                            <div class="category-title">{% trans "Accesorios" %}</div>
+                            <div class="category-sub">{% trans "Fundas, cargadores y periféricos" %}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{% url 'catalogo' %}?categoria=3#productos" class="text-decoration-none">
+                    <div class="category-card category-gaming">
+                        <div>
+                            <div class="category-title">{% trans "Gaming" %}</div>
+                            <div class="category-sub">{% trans "Accesorios y equipos para jugadores" %}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-footer">
+        <h3 style="font-weight:900; color:var(--azul-dark);">{% trans "Explora nuestros productos destacados" %}</h3>
+        <p style="color:var(--azul-main);">{% trans "Selección curada con los mejores artículos del mes." %}</p>
+        <a href="{% url 'catalogo' %}" class="btn hs-cta mt-2">{% trans "Ver destacados" %}</a>
+    </section>
+
+</div>
+
+{% endblock %}

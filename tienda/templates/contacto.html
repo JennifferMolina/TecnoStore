@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+<style>
+    .contact-wrapper {
+        margin-top: 20px;
+    }
+
+    .contact-hero {
+        background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        border: 1px solid var(--borde);
+        border-radius: 24px;
+        box-shadow: 0 8px 22px rgba(8, 47, 73, 0.12);
+        margin-bottom: 28px;
+        padding: 36px;
+    }
+
+    .contact-hero p {
+        color: var(--azul-main);
+        font-size: 17px;
+        margin-bottom: 0;
+    }
+
+    .contact-card,
+    .contact-info {
+        background: white;
+        border: 1px solid var(--borde);
+        border-radius: 20px;
+        box-shadow: 0 5px 18px rgba(8, 47, 73, 0.10);
+        height: 100%;
+        padding: 28px;
+    }
+
+    .contact-card label {
+        color: var(--azul-dark);
+        font-weight: 800;
+        margin-bottom: 6px;
+    }
+
+    .contact-card .form-control {
+        border: 1px solid var(--borde);
+        border-radius: 12px;
+        padding: 11px 13px;
+    }
+
+    .contact-card .form-control:focus {
+        border-color: var(--azul-accent);
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+    }
+
+    .contact-error {
+        color: #b91c1c;
+        font-size: 13px;
+        font-weight: 700;
+        margin-top: 5px;
+    }
+
+    .contact-info-item {
+        background: var(--azul-soft);
+        border: 1px solid var(--borde);
+        border-radius: 14px;
+        margin-bottom: 14px;
+        padding: 14px;
+    }
+
+    .contact-info-item strong {
+        color: var(--azul-dark);
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    .contact-info-item span {
+        color: var(--azul-main);
+        font-weight: 700;
+    }
+
+    @media (max-width: 576px) {
+        .contact-hero,
+        .contact-card,
+        .contact-info {
+            padding: 22px;
+        }
+    }
+</style>
+
+<div class="contact-wrapper">
+    <section class="contact-hero">
+        <h1>{% trans "Contacto" %}</h1>
+        <p>
+            {% trans "Escríbenos si tienes dudas sobre productos, compras, despachos o soporte." %}
+            {% trans "Nuestro equipo revisará tu mensaje lo antes posible." %}
+        </p>
+    </section>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="contact-card">
+                <h2 class="mb-4">{% trans "Enviar mensaje" %}</h2>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.nombre.id_for_label }}" data-i18n="name">{{ form.nombre.label }}</label>
+                            {{ form.nombre }}
+                            {% for error in form.nombre.errors %}
+                                <div class="contact-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.email.id_for_label }}" data-i18n="email">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% for error in form.email.errors %}
+                                <div class="contact-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.telefono.id_for_label }}" data-i18n="phone">{{ form.telefono.label }}</label>
+                            {{ form.telefono }}
+                            {% for error in form.telefono.errors %}
+                                <div class="contact-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.asunto.id_for_label }}" data-i18n="subject">{{ form.asunto.label }}</label>
+                            {{ form.asunto }}
+                            {% for error in form.asunto.errors %}
+                                <div class="contact-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.mensaje.id_for_label }}">{{ form.mensaje.label }}</label>
+                            {{ form.mensaje }}
+                            {% for error in form.mensaje.errors %}
+                                <div class="contact-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-4">
+                        {% trans "Enviar mensaje" %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <aside class="contact-info">
+                <h2 class="mb-4">{% trans "Datos de contacto" %}</h2>
+
+                <div class="contact-info-item">
+                    <strong>{% trans "Ubicación" %}</strong>
+                    <span>{% trans "Santiago, Chile" %}</span>
+                </div>
+
+                <div class="contact-info-item">
+                    <strong>{% trans "Correo" %}</strong>
+                    <span>contacto@tecnostore.cl</span>
+                </div>
+
+                <div class="contact-info-item">
+                    <strong>{% trans "Teléfono" %}</strong>
+                    <span>{% trans "+56 9 1234 5678" %}</span>
+                </div>
+
+                <div class="contact-info-item">
+                    <strong>{% trans "Horario" %}</strong>
+                    <span>{% trans "Lunes a viernes, 09:00 a 18:00" %}</span>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

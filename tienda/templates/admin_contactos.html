@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .admin-contact-header {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+
+    .contact-status {
+        border-radius: 999px;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 900;
+        padding: 5px 10px;
+    }
+
+    .contact-status.read {
+        background: #e0f2fe;
+        color: var(--azul-dark);
+    }
+
+    .contact-status.unread {
+        background: var(--azul-accent);
+        color: var(--azul-dark);
+    }
+
+    .message-preview {
+        max-width: 360px;
+        white-space: normal;
+    }
+
+    @media (max-width: 768px) {
+        .admin-contact-table {
+            min-width: 860px;
+        }
+    }
+</style>
+
+<div class="card p-4">
+    <div class="admin-contact-header">
+        <div>
+            <h2>✉️ Mensajes de contacto</h2>
+            <p class="mb-0 text-muted">
+                Revisa las consultas enviadas desde el formulario de contacto.
+            </p>
+        </div>
+
+        <a href="{% url 'admin:tienda_mensajecontacto_changelist' %}" class="btn btn-tecno">
+            Abrir en Django Admin
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle admin-contact-table">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Asunto</th>
+                    <th>Mensaje</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for mensaje in mensajes_contacto %}
+                <tr>
+                    <td>
+                        {% if mensaje.leido %}
+                            <span class="contact-status read">Leído</span>
+                        {% else %}
+                            <span class="contact-status unread">Nuevo</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ mensaje.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>{{ mensaje.nombre }}</td>
+                    <td>
+                        <a href="mailto:{{ mensaje.email }}">{{ mensaje.email }}</a>
+                    </td>
+                    <td>{{ mensaje.telefono|default:"No informado" }}</td>
+                    <td>{{ mensaje.asunto }}</td>
+                    <td class="message-preview">{{ mensaje.mensaje }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No hay mensajes de contacto registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

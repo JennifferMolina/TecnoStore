@@ -1,0 +1,585 @@
+{% extends 'base.html' %}
+{% load precio_filters %}
+{% load i18n %}
+
+{% block content %}
+
+<style>
+    .hero-full {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-top: -40px;
+        background: var(--azul-soft);
+        padding: 0 0 24px 0;
+        overflow: hidden;
+    }
+
+    .hero-carousel {
+        background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        border-radius: 0 0 26px 26px;
+        padding: 28px 36px;
+        box-shadow: 0 8px 22px rgba(8, 47, 73, 0.14);
+        border: 1px solid var(--borde);
+        border-top: none;
+        min-height: 420px;
+        overflow: hidden;
+    }
+
+    .hero-carousel .carousel-item {
+        min-height: 360px;
+    }
+
+    .hero-carousel .row {
+        min-height: 360px;
+    }
+
+    .hero-title {
+        font-size: 40px;
+        font-weight: 900;
+        color: var(--azul-dark);
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-description {
+        color: var(--azul-main);
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .hero-img {
+        width: 100%;
+        max-width: 250px;
+        max-height: 210px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto 12px auto;
+        filter: drop-shadow(0 12px 14px rgba(8, 47, 73, 0.16));
+    }
+
+    .hero-copy {
+        min-width: 0;
+    }
+
+    .hero-product-info {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero-product-name {
+        font-size: 28px;
+        line-height: 1.1;
+        font-weight: 900;
+        margin: 10px 0 8px;
+        color: var(--azul-dark);
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        max-width: 540px;
+    }
+
+    .hero-price {
+        font-size: 30px;
+        font-weight: 900;
+        color: var(--azul-main);
+        margin-bottom: 8px;
+    }
+
+    .badge-best {
+        background: var(--azul-main);
+        color: white;
+        padding: 7px 13px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .rating {
+        color: #0284c7;
+        margin-bottom: 8px;
+    }
+
+    .product-actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 6px;
+    }
+
+    .carousel-indicators {
+        margin-bottom: 0;
+    }
+
+    .carousel-indicators button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .btn-store,
+    .btn-cart {
+        background: var(--azul-main);
+        border: none;
+        color: white;
+        font-weight: 700;
+        border-radius: 10px;
+    }
+
+    .btn-store:hover,
+    .btn-cart:hover {
+        background: var(--azul-dark);
+        color: white;
+    }
+
+    .category-box {
+        border-radius: 22px;
+        padding: 22px;
+        margin-bottom: 25px;
+        background: white;
+        border: 1px solid var(--borde);
+        box-shadow: 0 5px 18px rgba(8, 47, 73, 0.10);
+    }
+
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+    .category-header a {
+        color: var(--azul-main);
+        font-weight: bold;
+    }
+
+    .product-card-mini {
+        background: white;
+        border-radius: 16px;
+        padding: 14px;
+        height: 100%;
+        border: 1px solid var(--borde);
+        transition: 0.25s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 260px;
+        position: relative;
+    }
+
+    .product-card-mini:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 22px rgba(8, 47, 73, 0.16);
+    }
+
+    .product-card-mini a.product-name-link {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .product-card-mini a.product-name-link:hover {
+        text-decoration: underline;
+    }
+
+    .product-card-mini img {
+        width: 100%;
+        max-height: 150px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+    .product-card-mini .btn {
+        width: 100%;
+    }
+
+    .product-name {
+        font-size: 14px;
+        min-height: 48px;
+        font-weight: 700;
+        color: var(--azul-dark);
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .price {
+        font-weight: 900;
+        color: var(--azul-main);
+    }
+
+    .tag {
+        background: var(--azul-light);
+        color: var(--azul-dark);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+
+    .benefits,
+    .filter-panel {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid var(--borde);
+        box-shadow: 0 4px 15px rgba(8, 47, 73, 0.08);
+    }
+
+    #productos {
+        scroll-margin-top: 155px;
+    }
+
+    .benefits {
+        margin: 30px 0;
+    }
+
+    .benefit-icon {
+        font-size: 34px;
+        color: var(--azul-main);
+    }
+
+    @media (max-width: 992px) {
+        .hero-full {
+            margin-top: -20px;
+        }
+
+        .hero-carousel {
+            padding: 24px 20px;
+            min-height: auto;
+        }
+
+        .hero-carousel .carousel-item,
+        .hero-carousel .row {
+            min-height: auto;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            line-height: 1.08;
+        }
+
+        .hero-description {
+            font-size: 16px;
+        }
+
+        .hero-img {
+            max-height: 190px;
+        }
+
+        .hero-product-name {
+            font-size: 24px;
+        }
+
+        .hero-price {
+            font-size: 26px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-full {
+            margin-top: -16px;
+            padding-bottom: 18px;
+        }
+
+        .hero-full .container {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .hero-carousel {
+            border-radius: 0 0 16px 16px;
+            padding: 20px 16px;
+        }
+
+        .hero-carousel .row {
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 28px;
+        }
+
+        .hero-description {
+            font-size: 15px;
+        }
+
+        .hero-img {
+            max-height: 165px;
+            max-width: 230px;
+        }
+
+        .hero-product-name {
+            font-size: 21px;
+        }
+
+        .hero-price {
+            font-size: 23px;
+        }
+
+        .btn-store,
+        .btn-cart {
+            width: 100%;
+        }
+
+        .product-actions {
+            width: 100%;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 9%;
+        }
+    }
+</style>
+
+<div class="hero-full">
+    <div class="container">
+
+        <div id="carouselMasVendidos" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="3000">
+
+            <div class="carousel-indicators">
+                {% for producto in mas_vendidos %}
+                    <button type="button" data-bs-target="#carouselMasVendidos" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+
+            <div class="carousel-inner">
+                {% for producto in mas_vendidos %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="row align-items-center gy-3">
+
+                        <div class="col-lg-6 hero-copy pe-lg-5 text-center text-lg-start">
+                            <h1 class="hero-title">{% trans "Los más vendidos" %}</h1>
+                            <p class="hero-description">{% trans "Descubre los productos más elegidos por nuestros clientes." %}</p>
+                            <a href="#productos" class="btn btn-store btn-lg">{% trans "Ver productos" %}</a>
+                        </div>
+
+                        <div class="col-lg-6 hero-product-info">
+                            {% if producto.imagen %}
+                                <img src="{{ producto.imagen.url }}" class="hero-img" alt="{{ producto.nombre }}">
+                            {% endif %}
+
+                            <span class="badge-best">{% trans "MÁS VENDIDO" %}</span>
+                            <h2 class="hero-product-name" data-i18n-original="{{ producto.nombre }}">{{ producto.nombre }}</h2>
+                            <p class="hero-price">{{ producto.precio|precio_clp }}</p>
+                            <p class="rating">★★★★★ <span class="text-dark">(128)</span></p>
+
+                            <div class="product-actions">
+                                <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-cart btn-lg">
+                                    {% trans "Agregar al carrito" %}
+                                </a>
+                                <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-outline-secondary btn-lg">
+                                    {% trans "Ver detalle" %}
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% empty %}
+                <div class="carousel-item active">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="hero-title">{% trans "Los más vendidos" %}</h1>
+                            <p class="hero-description mb-0">
+                                {% trans "Aún no hay productos para destacar." %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselMasVendidos" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselMasVendidos" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<div id="categorias" class="row mt-4">
+
+    <div class="col-md-4">
+        <div class="category-box">
+            <div class="category-header">
+                <h4>🎧 {% trans "Tecnología" %}</h4>
+                <a href="{% url 'catalogo' %}?categoria=1#productos">{% trans "Ver más ›" %}</a>
+            </div>
+
+            <div class="row">
+                {% for producto in tecnologia %}
+                <div class="col-md-6 mb-3">
+                    <div class="product-card-mini">
+                        <span class="tag">{% trans "Nuevo" %}</span>
+                        {% if producto.imagen %}
+                            <a href="{% url 'detalle_producto' producto.id %}">
+                                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'detalle_producto' producto.id %}" class="product-name-link">
+                            <div class="product-name" data-i18n-original="{{ producto.nombre }}">{{ producto.nombre }}</div>
+                        </a>
+                        <div class="price">{{ producto.precio|precio_clp }}</div>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-outline-secondary btn-sm">{% trans "Ver detalle" %}</a>
+                            <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-sm btn-cart">{% trans "Agregar" %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="category-box">
+            <div class="category-header">
+                <h4>🎧 {% trans "Accesorios" %}</h4>
+                <a href="{% url 'catalogo' %}?categoria=2#productos">{% trans "Ver más ›" %}</a>
+            </div>
+
+            <div class="row">
+                {% for producto in accesorios %}
+                <div class="col-md-6 mb-3">
+                    <div class="product-card-mini">
+                        <span class="tag">{% trans "Oferta" %}</span>
+                        {% if producto.imagen %}
+                            <a href="{% url 'detalle_producto' producto.id %}">
+                                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'detalle_producto' producto.id %}" class="product-name-link">
+                            <div class="product-name" data-i18n-original="{{ producto.nombre }}">{{ producto.nombre }}</div>
+                        </a>
+                        <div class="price">{{ producto.precio|precio_clp }}</div>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-outline-secondary btn-sm">{% trans "Ver detalle" %}</a>
+                            <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-sm btn-cart">{% trans "Agregar" %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="category-box">
+            <div class="category-header">
+                <h4>🎮 {% trans "Gaming" %}</h4>
+                <a href="{% url 'catalogo' %}?categoria=3#productos">{% trans "Ver más ›" %}</a>
+            </div>
+
+            <div class="row">
+                {% for producto in gaming %}
+                <div class="col-md-6 mb-3">
+                    <div class="product-card-mini">
+                        <span class="tag">{% trans "Más vendido" %}</span>
+                        {% if producto.imagen %}
+                            <a href="{% url 'detalle_producto' producto.id %}">
+                                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'detalle_producto' producto.id %}" class="product-name-link">
+                            <div class="product-name" data-i18n-original="{{ producto.nombre }}">{{ producto.nombre }}</div>
+                        </a>
+                        <div class="price">{{ producto.precio|precio_clp }}</div>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-outline-secondary btn-sm">{% trans "Ver detalle" %}</a>
+                            <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-sm btn-cart">{% trans "Agregar" %}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="benefits">
+    <div class="row text-center">
+        <div class="col-md-3">🚚 <strong>Envíos gratis</strong><br><small>En compras mayores a $50.000</small></div>
+        <div class="col-md-3">💳 <strong>Hasta 12 cuotas</strong><br><small>Con tarjetas seleccionadas</small></div>
+        <div class="col-md-3">🛡️ <strong>Compra segura</strong><br><small>Protegemos tus datos</small></div>
+        <div class="col-md-3">🎧 <strong>Atención personalizada</strong><br><small>Estamos para ayudarte</small></div>
+    </div>
+</div>
+
+<div id="productos" class="filter-panel">
+
+    <h2>{% trans "Todos los productos" %}</h2>
+
+    <form method="get" action="{% url 'catalogo' %}#productos" class="row mt-3">
+        {% if busqueda %}
+            <input type="hidden" name="q" value="{{ busqueda }}">
+        {% endif %}
+
+        <div class="col-md-4">
+            <select name="categoria" class="form-select">
+                <option value="">{% trans "Todas las categorías" %}</option>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if categoria_seleccionada == categoria.id|stringformat:"s" %}selected{% endif %}>
+                        {{ categoria.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <select name="orden" class="form-select">
+                <option value="">{% trans "Orden por defecto" %}</option>
+                <option value="precio_asc" {% if orden_seleccionado == 'precio_asc' %}selected{% endif %}>{% trans "Precio menor a mayor" %}</option>
+                <option value="precio_desc" {% if orden_seleccionado == 'precio_desc' %}selected{% endif %}>{% trans "Precio mayor a menor" %}</option>
+                <option value="nombre_asc" {% if orden_seleccionado == 'nombre_asc' %}selected{% endif %}>{% trans "Nombre A-Z" %}</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-store">{% trans "Aplicar" %}</button>
+            <a href="{% url 'catalogo' %}#productos" class="btn btn-secondary">{% trans "Limpiar" %}</a>
+        </div>
+    </form>
+
+</div>
+
+<div class="row">
+
+    {% for producto in productos %}
+    <div class="col-md-3 mb-4">
+        <div class="product-card-mini">
+            <span class="tag">{% trans "Disponible" %}</span>
+
+            {% if producto.imagen %}
+                <a href="{% url 'detalle_producto' producto.id %}">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                </a>
+            {% endif %}
+
+            <a href="{% url 'detalle_producto' producto.id %}" class="product-name-link">
+                <div class="product-name" data-i18n-original="{{ producto.nombre }}">{{ producto.nombre }}</div>
+            </a>
+            <small data-i18n-original="{{ producto.categoria.nombre }}">{{ producto.categoria.nombre }}</small>
+            <div class="price">{{ producto.precio|precio_clp }}</div>
+
+            <div class="d-grid gap-2 mt-2">
+                <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-outline-secondary btn-sm">{% trans "Ver detalle" %}</a>
+                <a href="{% url 'agregar_al_carrito' producto.id %}" class="btn btn-cart btn-sm">{% trans "Agregar al carrito" %}</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

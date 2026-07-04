@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load precio_filters %}
+
+{% block content %}
+
+<div class="card p-4">
+    <h2>📦 Mis Compras</h2>
+
+    {% for pedido in pedidos %}
+        <div class="card p-3 mb-3">
+            <h5>Pedido #{{ pedido.id }}</h5>
+
+            <p>Fecha: {{ pedido.fecha }}</p>
+            <p>Estado: {{ pedido.estado }}</p>
+            <p>Total: {{ pedido.total|precio_clp }}</p>
+
+            <ul>
+                {% for detalle in pedido.detalles.all %}
+                    <li>
+                        {{ detalle.producto.nombre }} -
+                        Cantidad: {{ detalle.cantidad }} -
+                        Subtotal: {{ detalle.subtotal|precio_clp }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% empty %}
+        <p>No tienes compras registradas.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

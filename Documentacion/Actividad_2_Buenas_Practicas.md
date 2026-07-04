@@ -1,0 +1,85 @@
+# Actividad N°2: Buenas Prácticas para el Diseño de un Producto Tecnológico
+
+## Portada
+
+**Proyecto:** TecnoStore  
+**Actividad:** Buenas Prácticas para el Diseño de un Producto Tecnológico  
+**Tipo de producto:** E-commerce desarrollado con Django  
+**Fecha:** 02 de julio de 2026  
+**Estudiante:** ______________________________  
+
+## Introducción
+
+El presente documento resume el proceso de revisión, mejora y preparación final del sistema TecnoStore. El objetivo fue aplicar buenas prácticas de diseño, usabilidad, orden del proyecto y documentación para entregar un producto tecnológico más profesional, mantenible y fácil de evaluar.
+
+## Tecnologías utilizadas
+
+- Python
+- Django
+- Bootstrap 5
+- SQLite
+- Pillow
+
+## Descripción del producto TecnoStore
+
+TecnoStore es una aplicación web de comercio electrónico orientada a productos tecnológicos. El sistema permite que los usuarios se registren, naveguen por un catálogo, agreguen productos al carrito, completen un flujo de compra simulado y revisen sus compras. Además, incluye funcionalidades administrativas para gestionar productos, revisar compras de clientes y visualizar mensajes de contacto.
+
+## Errores detectados y corregidos
+
+Durante la revisión del producto se detectaron problemas visuales, de navegación y de flujo funcional. Entre los principales errores estaban páginas sin contenido visible, falta de consistencia visual, navegación no adaptada a dispositivos móviles, checkout demasiado directo y ausencia de documentación formal para la entrega.
+
+## Tabla de errores, correcciones y beneficios
+
+| Error detectado | Corrección aplicada | Beneficio obtenido |
+|---|---|---|
+| El home no mostraba contenido visible. | Se agregó estructura con `base.html`, bloque `content` y panel principal. | La pantalla inicial quedó funcional y clara para el usuario. |
+| La paleta visual no era consistente. | Se ajustaron colores globales y componentes a una paleta azul coherente. | Se logró mayor unidad visual en navegación, catálogo y formularios. |
+| El navbar se deformaba en celular/tablet. | Se implementó menú responsive con botón de tres rayas. | Mejor experiencia en dispositivos móviles. |
+| El carrito tenía diseño simple y colores antiguos. | Se rediseñó con imágenes, subtotales, total y botones claros. | El flujo de compra quedó más profesional y fácil de entender. |
+| El checkout aprobaba la compra de inmediato. | Se separó en datos de envío, pago simulado y confirmación. | Flujo más realista y controlado para el usuario. |
+| El administrador no veía datos completos de compra. | Se agregó detalle de productos, contacto y dirección de envío. | Mejor gestión administrativa de pedidos. |
+| No existía formulario de contacto funcional. | Se agregó formulario, modelo, vista, admin y panel de revisión. | Los usuarios pueden enviar consultas y el admin revisarlas. |
+| El footer era muy simple y luego demasiado grande. | Se creó footer profesional y luego se compactó visualmente. | Mejor proporción y acabado visual. |
+| Faltaba documentación de entrega. | Se agregaron README, requirements y documentación de actividad. | Entrega más completa, evaluable y reproducible. |
+
+## Mejoras implementadas
+
+- Rediseño del home con panel de acceso.
+- Catálogo con carrusel de productos destacados.
+- Buscador integrado al navbar.
+- Menú responsive para tablet y celular.
+- Resaltado de la sección activa en el navbar.
+- Carrito con imágenes, cantidades, subtotales y total.
+- Checkout dividido en envío y pago simulado.
+- Registro de datos de envío en pedidos.
+- Vista administrativa de compras con datos de contacto y dirección.
+- Formulario de contacto funcional.
+- Panel para revisar mensajes de contacto.
+- Perfil editable con actualización del nombre visible.
+- Footer e-commerce responsive y compacto.
+- Documentación de instalación, ejecución y entrega.
+
+## Feedback recibido y aplicado
+
+Se aplicó feedback relacionado con la usabilidad y la presentación del sitio. Algunos ajustes relevantes fueron devolver el carrusel de más vendidos, mejorar su tamaño en móvil, ajustar el intervalo de movimiento, mejorar el navbar responsive, compactar el footer, corregir colores fuera de la paleta y adaptar la experiencia del administrador para que vea solo accesos relevantes.
+
+## Capturas del sistema
+
+Espacios reservados para insertar posteriormente:
+
+- 01_inicio.png
+- 02_catalogo.png
+- 03_carrito.png
+- 04_checkout_envio.png
+- 05_checkout_pago.png
+- 06_perfil.png
+- 07_admin_productos.png
+- 08_mis_compras.png
+
+## Resultado final
+
+El resultado final es un proyecto Django más ordenado, con flujo de compra más completo, interfaz más consistente y documentación suficiente para ejecutar y evaluar el sistema. La aplicación mantiene sus funcionalidades principales y agrega mejoras visuales, administrativas y de experiencia de usuario.
+
+## Conclusión
+
+La mejora de TecnoStore permitió aplicar buenas prácticas de diseño de producto tecnológico, incluyendo consistencia visual, navegación responsive, claridad en los flujos, separación de responsabilidades y documentación. El sistema queda preparado para ser entregado como una versión funcional, ordenada y profesional.

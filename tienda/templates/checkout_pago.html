@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load precio_filters %}
+
+{% block content %}
+
+<style>
+    .payment-shell {
+        background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        border: 1px solid var(--borde);
+        border-radius: 22px;
+        box-shadow: 0 8px 22px rgba(8, 47, 73, 0.14);
+        padding: 28px;
+    }
+
+    .payment-card,
+    .payment-summary {
+        background: white;
+        border: 1px solid var(--borde);
+        border-radius: 18px;
+        height: 100%;
+        padding: 24px;
+        box-shadow: 0 5px 18px rgba(8, 47, 73, 0.08);
+    }
+
+    .payment-shell h2,
+    .payment-summary h4 {
+        color: var(--azul-dark);
+        font-weight: 900;
+    }
+
+    .fake-card {
+        background: linear-gradient(135deg, var(--azul-dark), var(--azul-main));
+        border-radius: 18px;
+        color: white;
+        margin-bottom: 22px;
+        padding: 24px;
+        box-shadow: 0 8px 18px rgba(8, 47, 73, 0.18);
+    }
+
+    .fake-card-chip {
+        background: #bae6fd;
+        border-radius: 8px;
+        height: 34px;
+        margin-bottom: 28px;
+        width: 52px;
+    }
+
+    .payment-card label {
+        color: var(--azul-dark);
+        font-weight: 900;
+        margin-bottom: 6px;
+    }
+
+    .payment-card .form-control {
+        border: 1px solid var(--borde);
+        border-radius: 12px;
+        padding: 11px 13px;
+    }
+
+    .payment-card .form-control:focus {
+        border-color: var(--azul-main);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.22);
+    }
+
+    .payment-error {
+        color: #dc2626;
+        font-size: 13px;
+        font-weight: 800;
+        margin-top: 5px;
+    }
+
+    .payment-total {
+        color: var(--azul-main);
+        font-size: 32px;
+        font-weight: 900;
+    }
+
+    .btn-payment-main,
+    .btn-payment-secondary {
+        border-radius: 12px;
+        font-weight: 900;
+        padding: 10px 15px;
+        text-decoration: none;
+    }
+
+    .btn-payment-main {
+        background: var(--azul-main);
+        border: none;
+        color: white;
+    }
+
+    .btn-payment-main:hover {
+        background: var(--azul-dark);
+        color: white;
+    }
+
+    .btn-payment-secondary {
+        background: white;
+        border: 1px solid var(--azul-main);
+        color: var(--azul-main);
+    }
+
+    .btn-payment-secondary:hover {
+        background: var(--azul-light);
+        color: var(--azul-dark);
+    }
+</style>
+
+<div class="payment-shell">
+    <h2 class="mb-4">💳 Pago simulado</h2>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="payment-card">
+                <div class="fake-card">
+                    <div class="fake-card-chip"></div>
+                    <h4>Tarjeta de prueba</h4>
+                    <p class="mb-0">Pago seguro simulado para TecnoStore</p>
+                </div>
+
+                <form method="post" action="{% url 'confirmar_pago_simulado' %}" novalidate>
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="{{ form.nombre_titular.id_for_label }}">{{ form.nombre_titular.label }}</label>
+                            {{ form.nombre_titular }}
+                            {% for error in form.nombre_titular.errors %}
+                                <div class="payment-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.numero_tarjeta.id_for_label }}">{{ form.numero_tarjeta.label }}</label>
+                            {{ form.numero_tarjeta }}
+                            {% for error in form.numero_tarjeta.errors %}
+                                <div class="payment-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.fecha_vencimiento.id_for_label }}">{{ form.fecha_vencimiento.label }}</label>
+                            {{ form.fecha_vencimiento }}
+                            {% for error in form.fecha_vencimiento.errors %}
+                                <div class="payment-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.cvv.id_for_label }}">{{ form.cvv.label }}</label>
+                            {{ form.cvv }}
+                            {% for error in form.cvv.errors %}
+                                <div class="payment-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap mt-4">
+                        <a href="{% url 'checkout_envio' %}" class="btn-payment-secondary">
+                            Volver a envío
+                        </a>
+                        <button type="submit" class="btn-payment-main">
+                            Confirmar pago
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <aside class="payment-summary">
+                <h4>Resumen de compra</h4>
+                <p class="mb-2">
+                    <strong>Enviar a:</strong><br>
+                    {{ datos_envio.nombre_completo }}<br>
+                    {{ datos_envio.direccion }}, {{ datos_envio.ciudad }}<br>
+                    {{ datos_envio.region }}
+                </p>
+
+                <hr>
+
+                <div>Total a pagar</div>
+                <div class="payment-total">{{ carrito.total|precio_clp }}</div>
+            </aside>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

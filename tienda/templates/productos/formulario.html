@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card p-4">
+    <h2>📦 Producto</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-tecno">
+            Guardar
+        </button>
+
+        <a href="{% url 'lista_productos' %}" class="btn btn-secondary">
+            Volver
+        </a>
+    </form>
+</div>
+
+{% endblock %}
